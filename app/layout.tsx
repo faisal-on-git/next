@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   description: "Personal blog and portfolio of Your Name",
 };
 
+
 export default function RootLayout({
   children,
 }: {
@@ -29,7 +30,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${robotoMono.variable}`}>
       <body className="font-sans antialiased">
         <Navigation />
-        <main className="max-w-4xl mx-auto px-4 py-8">{children}</main>
+        <main className="max-w-4xl mx-auto px-4 py-2">{children}</main>
       </body>
     </html>
   );

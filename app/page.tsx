@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllPosts, PostData } from "@/lib/api";
+import QuoteDisplay from "@/components/QuoteDisplay";
 
 export default async function Home() {
   const allPosts = await getAllPosts();
@@ -7,6 +8,7 @@ export default async function Home() {
 
   return (
     <div>
+      <QuoteDisplay />
       <h1 className="text-4xl font-bold mb-6">Welcome to My Blog & Portfolio</h1>
       <section className="mb-12">
         <h2 className="text-2xl font-semibold mb-4">About Me</h2>
