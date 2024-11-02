@@ -15,7 +15,7 @@ export default function QuoteDisplay() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
       transition={{ duration: 1, ease: "easeOut" }}
-      className="max-w-4xl mx-auto my-4 px-4 sm:px-6 lg:px-8"
+      className="max-w-4xl mx-auto my-4"
     >
       <div className="relative p-8 bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary"></div>

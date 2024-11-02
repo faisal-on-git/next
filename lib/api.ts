@@ -1,42 +1,54 @@
-import fs from 'fs/promises';
-import path from 'path';
-import matter from 'gray-matter';
+import fs from "fs/promises";
+import path from "path";
+import matter from "gray-matter";
 
-const postsDirectory = path.join(process.cwd(), 'public');
+const contentDirectory = path.join(process.cwd(), "public", "blog");
 
-export async function getAllPosts() {
-  const entries = await fs.readdir(postsDirectory, { withFileTypes: true });
-  const directories = entries.filter(entry => entry.isDirectory());
+export async function getAllPosts(category?: string) {
+  const categoryDirectory = category
+    ? path.join(contentDirectory, category)
+    : contentDirectory;
 
-  const allPosts = await Promise.all(
-    directories.map(async dir => {
-      const fullPath = path.join(postsDirectory, dir.name, 'index.md');
-      try {
-        const fileContents = await fs.readFile(fullPath, 'utf8');
-        const { data } = matter(fileContents);
+  try {
+    const folders = await fs.readdir(categoryDirectory, {
+      withFileTypes: true,
+    });
+    const postFolders = folders.filter((dirent) => dirent.isDirectory());
+
+    const posts = await Promise.all(
+      postFolders.map(async (folder) => {
+        const slug = folder.name;
+        const fullPath = path.join(categoryDirectory, slug, "index.md");
+        const fileContents = await fs.readFile(fullPath, "utf8");
+        const { data, content } = matter(fileContents);
+
         return {
-          slug: dir.name,
+          slug,
+          category: category || "uncategorized",
           ...data,
-        } as PostData;
-      } catch (error) {
-        console.error(`Error reading ${fullPath}:`, error);
-        return null;
-      }
-    })
-  );
+          content,
+        };
+      })
+    );
 
-  return allPosts
-    .filter((post): post is PostData => post !== null)
-    .sort((a, b) => ((a.date ?? '') > (b.date ?? '') ? -1 : 1));
+    return posts.sort(
+      (post1, post2) =>
+        new Date(post2.date).getTime() - new Date(post1.date).getTime()
+    );
+  } catch (error) {
+    console.error(`Error reading posts from ${categoryDirectory}:`, error);
+    return [];
+  }
 }
 
-export async function getPostBySlug(slug: string) {
-  const fullPath = path.join(postsDirectory, slug, 'index.md');
+export async function getPostBySlug(slug: string, category: string) {
+  const fullPath = path.join(contentDirectory, category, slug, "index.md");
   try {
-    const fileContents = await fs.readFile(fullPath, 'utf8');
+    const fileContents = await fs.readFile(fullPath, "utf8");
     const { data, content } = matter(fileContents);
     return {
       slug,
+      category,
       content,
       ...data,
     } as PostData;
@@ -48,9 +60,10 @@ export async function getPostBySlug(slug: string) {
 
 export interface PostData {
   slug: string;
-  title?: string;
-  date?: string;
-  content?: string;
+  category: string;
+  title: string;
+  date: string;
+  content: string;
   spoiler?: string;
   description?: string;
   [key: string]: any;

@@ -5,13 +5,12 @@ import Link from 'next/link';
 import remarkSmartypants from 'remark-smartypants';
 import rehypePrettyCode from 'rehype-pretty-code';
 import overnight from 'overnight/themes/Overnight-Slumber.json';
-import { remarkMdxEvalCodeBlock } from '@/lib/remarkMdxEvalCodeBlock'; // Import the new plugin
+import { remarkMdxEvalCodeBlock } from '@/lib/remarkMdxEvalCodeBlock';
 import './markdown.css'; 
 import { sans } from '@/app/fonts';
 
 overnight.colors["editor.background"] = "var(--code-bg)";
 
-// Add this custom component
 const CustomLink = (props: any) => {
   const href = props.href;
   const isInternalLink = href && (href.startsWith('/') || href.startsWith('#'));
@@ -24,40 +23,42 @@ const CustomLink = (props: any) => {
 };
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts();
-  return posts.map((post) => ({
+  const techPosts = await getAllPosts('tech')
+  const nonTechPosts = await getAllPosts('non-tech')
+  const allPosts = [...techPosts, ...nonTechPosts]
+  
+  return allPosts.map((post) => ({
+    category: post.category,
     slug: post.slug,
-  }));
+  }))
 }
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
-  const post = await getPostBySlug(params.slug);
+export default async function BlogPost({ params }: { params: { category: string, slug: string } }) {
+  const post = await getPostBySlug(params.slug, params.category);
 
   if (!post) {
     notFound();
   }
 
   const discussUrl = `https://x.com/search?q=${encodeURIComponent(
-    `https://yourdomain.com/blog/${params.slug}/`,
+    `https://yourdomain.com/blog/${params.category}/${params.slug}/`,
   )}`;
-  const editUrl = `https://github.com/yourusername/yourrepo/edit/main/public/${encodeURIComponent(
+  const editUrl = `https://github.com/yourusername/yourrepo/edit/main/public/blog/${params.category}/${encodeURIComponent(
     params.slug,
   )}/index.md`;
 
   return (
     <article className="mx-auto max-w-2xl">
-      {/* <h1>{post.title}</h1> */}
       <h1
         className={[
-          // sans.className,
+          sans.className,
           "text-[40px] font-black leading-[44px] text-[--title]",
         ].join(" ")}
       >
         {post.title}
       </h1>
       {post.date && (
-              <p className="mt-2 text-[13px] text-gray-700 dark:text-gray-300">
-
+        <p className="mt-2 text-[13px] text-gray-700 dark:text-gray-300">
           {new Date(post.date).toLocaleDateString("en", {
             day: "numeric",
             month: "long",
@@ -70,14 +71,13 @@ export default async function BlogPost({ params }: { params: { slug: string } })
           source={post.content || ''}
           components={{
             a: CustomLink,
-            // Add any custom components here
           }}
           options={{
             mdxOptions: {
               useDynamicImport: true,
               remarkPlugins: [
                 remarkSmartypants,
-                [remarkMdxEvalCodeBlock, params.slug], // Pass the slug as filename
+                [remarkMdxEvalCodeBlock, params.slug],
               ],
               rehypePlugins: [
                 [
@@ -101,8 +101,8 @@ export default async function BlogPost({ params }: { params: { slug: string } })
   );
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = await getPostBySlug(params.slug);
+export async function generateMetadata({ params }: { params: { category: string, slug: string } }) {
+  const post = await getPostBySlug(params.slug, params.category);
   if (!post) return {};
   return {
     title: `${post.title} — Your Blog Name`,
