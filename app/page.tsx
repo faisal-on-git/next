@@ -1,6 +1,3 @@
-
-
-
 import Link from "next/link";
 import { getAllPosts, PostData } from "@/lib/api";
 import QuoteDisplay from "@/components/QuoteDisplay";
@@ -19,13 +16,13 @@ export default async function Home() {
       {/* <h1 className="text-4xl font-bold mb-6">
         Welcome to My Blog & Portfolio
       </h1> */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">About Me</h2>
-        <p>
-          Hello! I'm Faisal, a software engineer passionate about technology and
-          its impact on society. This is my personal space where I share my
-          thoughts on technology, philosophy, and everything in between.
-        </p>
+<section className="mb-12 w-full">
+  <h2 className="text-2xl font-semibold mb-4">About Me</h2>
+  <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+    Hi, I'm Faisal, a software engineer by profession. This blog is my
+    platform to explore and discuss the realms of technology, philosophy,
+    poetry, and anything else that sparks my curiosity.
+  </p>
       </section>
       <section>
         {/* <h2 className="text-2xl font-semibold mb-4">Recent Blog Posts</h2> */}

@@ -40,12 +40,12 @@ export default async function BlogPost({ params }: { params: { category: string,
     notFound();
   }
 
-  const discussUrl = `https://x.com/search?q=${encodeURIComponent(
-    `https://yourdomain.com/blog/${params.category}/${params.slug}/`,
-  )}`;
-  const editUrl = `https://github.com/yourusername/yourrepo/edit/main/public/blog/${params.category}/${encodeURIComponent(
-    params.slug,
-  )}/index.md`;
+  // const discussUrl = `https://x.com/search?q=${encodeURIComponent(
+  //   `https://yourdomain.com/blog/${params.category}/${params.slug}/`,
+  // )}`;
+  // const editUrl = `https://github.com/yourusername/yourrepo/edit/main/public/blog/${params.category}/${encodeURIComponent(
+  //   params.slug,
+  // )}/index.md`;
 
   return (
     <article className="mx-auto max-w-2xl">
@@ -90,12 +90,12 @@ export default async function BlogPost({ params }: { params: { category: string,
             },
           }}
         />
-        <hr />
-        <p>
+        {/* <hr /> */}
+        {/* <p>
           <Link href={discussUrl}>Discuss on 𝕏</Link>
           &nbsp;&nbsp;&middot;&nbsp;&nbsp;
           <Link href={editUrl}>Edit on GitHub</Link>
-        </p>
+        </p> */}
       </div>
     </article>
   );
