@@ -1,14 +1,10 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Menu, ChevronDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet"
+import { useState } from "react";
+import Link from "next/link";
+import { Menu, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -16,8 +12,9 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAV_ITEMS = [
   {
@@ -36,10 +33,16 @@ const NAV_ITEMS = [
     name: "Projects",
     link: "/projects",
   },
-]
+];
 
-function NavItem({ item, isMobile = false }: { item: typeof NAV_ITEMS[0], isMobile?: boolean }) {
-  const [isOpen, setIsOpen] = useState(false)
+function NavItem({
+  item,
+  isMobile = false,
+}: {
+  item: (typeof NAV_ITEMS)[0];
+  isMobile?: boolean;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
 
   if (item.subItems) {
     if (isMobile) {
@@ -50,7 +53,12 @@ function NavItem({ item, isMobile = false }: { item: typeof NAV_ITEMS[0], isMobi
             className="flex items-center justify-between w-full text-left text-sm font-medium transition-colors hover:text-primary"
           >
             {item.name}
-            <ChevronDown className={cn("h-4 w-4 transition-transform", isOpen && "rotate-180")} />
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 transition-transform",
+                isOpen && "rotate-180"
+              )}
+            />
           </button>
           {isOpen && (
             <ul className="mt-2 ml-4 space-y-2">
@@ -67,7 +75,7 @@ function NavItem({ item, isMobile = false }: { item: typeof NAV_ITEMS[0], isMobi
             </ul>
           )}
         </div>
-      )
+      );
     }
 
     return (
@@ -100,7 +108,7 @@ function NavItem({ item, isMobile = false }: { item: typeof NAV_ITEMS[0], isMobi
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-    )
+    );
   }
 
   return (
@@ -110,23 +118,28 @@ function NavItem({ item, isMobile = false }: { item: typeof NAV_ITEMS[0], isMobi
     >
       {item.name}
     </Link>
-  )
+  );
 }
 
 function NavLinks({ isMobile = false }: { isMobile?: boolean }) {
   return (
-    <ul className={cn("flex", isMobile ? "flex-col space-y-4" : "items-center space-x-6")}>
+    <ul
+      className={cn(
+        "flex",
+        isMobile ? "flex-col space-y-4" : "items-center space-x-6"
+      )}
+    >
       {NAV_ITEMS.map((item, index) => (
         <li key={index}>
           <NavItem item={item} isMobile={isMobile} />
         </li>
       ))}
     </ul>
-  )
+  );
 }
 
 export default function StickyNav() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -139,38 +152,38 @@ export default function StickyNav() {
           </div>
           <nav className="hidden md:flex">
             <NavLinks />
+            <ThemeToggle />
           </nav>
           <div className="md:hidden">
-          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
-              >
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="pr-0">
-              <MobileLink
-                href="/"
-                className="flex items-center"
-                onOpenChange={setIsMobileMenuOpen}
-              >
-                <span className="font-bold">Faisalism</span>
-              </MobileLink>
-              <div className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
-                <NavLinks isMobile />
-              </div>
-            </SheetContent>
-          </Sheet>
+            <ThemeToggle />
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+                >
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="pr-0">
+                <MobileLink
+                  href="/"
+                  className="flex items-center"
+                  onOpenChange={setIsMobileMenuOpen}
+                >
+                  <span className="font-bold">Faisalism</span>
+                </MobileLink>
+                <div className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
+                  <NavLinks isMobile />
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
-          {/* <div className="flex items-center space-x-4 md:hidden">
-          </div> */}
         </div>
       </div>
     </header>
-  )
+  );
 }
 
 function MobileLink({
@@ -180,18 +193,18 @@ function MobileLink({
   children,
   ...props
 }: React.ComponentPropsWithoutRef<typeof Link> & {
-  onOpenChange?: (open: boolean) => void
+  onOpenChange?: (open: boolean) => void;
 }) {
   return (
     <Link
       href={href}
       onClick={() => {
-        onOpenChange?.(false)
+        onOpenChange?.(false);
       }}
       className={className}
       {...props}
     >
       {children}
     </Link>
-  )
+  );
 }
